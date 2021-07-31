@@ -4,6 +4,7 @@ const bodyparser = require("body-parser");
 const session = require("express-session");
 const{check,validationResult}= require("express-validator")
 const {v4:uuidv4}= require("uuid");
+const port= process.env.PORT||5000;
 
 const nav =[
     {
@@ -94,4 +95,4 @@ else if(req.body.Genre.length <5 ) {
     }
 
 }) 
-app.listen(5000);
+app.listen(port,()=>{console.log("Server ready at " + port)});
