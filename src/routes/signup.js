@@ -47,20 +47,20 @@ check("exampleInputPassword2").notEmpty().isLength({ min: 5 })
 
 if(Object.entries(errors[0].errors).length === 0 && (req.body.exampleInputPassword1 === req.body.exampleInputPassword2)){
     errors.push({"value":"password mismatch"})
-    res.render("D:/coding/Asslibraryapp/src/views/index",{nav,title:"Libray",error1: "",error2:"",error3:"",error4:""})
+    res.render("index",{nav,title:"Libray",error1: "",error2:"",error3:"",error4:""})
   
 }
 else if(  (req.body.exampleInputPassword1 === req.body.exampleInputPassword2) && req.body.exampleInputPassword1.length <5 ){
   
-    res.render("D:/coding/Asslibraryapp/src/views/signup",{nav,title:"Libray",error1: "",error2:"",error3:"Password weak",error4:""})
+    res.render("signup",{nav,title:"Libray",error1: "",error2:"",error3:"Password weak",error4:""})
     }
 else if(req.body.exampleInputPassword1 !== req.body.exampleInputPassword2) {
   
-        res.render("D:/coding/Asslibraryapp/src/views/signup",{nav,title:"Libray",error1: "",error2:"",error3:"",error4:"Password mismatch"})
+        res.render("signup",{nav,title:"Libray",error1: "",error2:"",error3:"",error4:"Password mismatch"})
         }   
 else if(req.body.exampleInputName.length<3 && (req.body.exampleInputPassword1 !== req.body.exampleInputPassword2)  ) {
   
-            res.render("D:/coding/Asslibraryapp/src/views/signup",{nav,title:"Libray",error1: "Invalid crentials",error2:"",error3:"",error4:""})
+            res.render("signup",{nav,title:"Libray",error1: "Invalid crentials",error2:"",error3:"",error4:""})
             }  
  else {
   
