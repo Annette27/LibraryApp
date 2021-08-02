@@ -39,7 +39,7 @@ signinRouter.post("/",(req,res)=>{
     if(req.body.email ==credential.email && req.body.password == credential.password){
       req.session.user=req.body.email;
   
-      res.render("D:/coding/Asslibraryapp/src/views/index",{nav,title:"Libray",error1: "",error2:""})
+      res.render("index",{nav,title:"Libray",error1: "",error2:""})
        
     }
     else if(req.body.email !=credential.email && req.body.password == credential.password){
