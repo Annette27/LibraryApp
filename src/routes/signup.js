@@ -64,7 +64,7 @@ else if(req.body.exampleInputName.length<3 && (req.body.exampleInputPassword1 !=
             }  
  else {
   
-    res.render("D:/coding/Asslibraryapp/src/views/signup",{nav,title:"Libray",error1: "Invalid crentials",error2:"",error3:"",error4:""})
+    res.render("signup",{nav,title:"Libray",error1: "Invalid crentials",error2:"",error3:"",error4:""})
     }
 
 
