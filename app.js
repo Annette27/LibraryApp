@@ -74,24 +74,24 @@ check("Author").notEmpty().isLength({ min: 5 })
 
 if(Object.entries(errors[0].errors).length === 0){
    
-    res.render("D:/coding/Asslibraryapp/src/views/index",{nav,title:"Libray",error1: "",error2:"",error3:"",error4:""})
+    res.render("index",{nav,title:"Libray",error1: "",error2:"",error3:"",error4:""})
   
 }
 else if(req.body.BookName.length <5 ){
   
-    res.render("D:/coding/Asslibraryapp/src/views/addbook",{nav,title:"Libray",error1: "Book name should be atleast 5 letters long",error2:"",error3:"",error4:""})
+    res.render("addbook",{nav,title:"Libray",error1: "Book name should be atleast 5 letters long",error2:"",error3:"",error4:""})
     }
 else if(req.body.Author.length <5) {
   
-        res.render("D:/coding/Asslibraryapp/src/views//addbook",{nav,title:"Libray",error1: "",error2:"Author name should be atleast 5 letters long",error3:"",error4:""})
+        res.render("addbook",{nav,title:"Libray",error1: "",error2:"Author name should be atleast 5 letters long",error3:"",error4:""})
         }   
 else if(req.body.Genre.length <5 ) {
   
-            res.render("D:/coding/Asslibraryapp/src/views//addbook",{nav,title:"Libray",error1: "",error2:"",error3:"Genre name should be atleast 5 letters long",error4:""})
+            res.render("addbook",{nav,title:"Libray",error1: "",error2:"",error3:"Genre name should be atleast 5 letters long",error4:""})
             }  
  else {
   
-    res.render("D:/coding/Asslibraryapp/src/views/addbook",{nav,title:"Libray",error1: "Invalid crentials",error2:"",error3:"",error4:""})
+    res.render("addbook",{nav,title:"Libray",error1: "Invalid crentials",error2:"",error3:"",error4:""})
     }
 
 }) 
