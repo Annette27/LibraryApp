@@ -35,10 +35,10 @@ function router(nav){
        return signupRouter;
 }
 signupRouter.post("/",
-[check("exampleInputName").notEmpty().isLength({ min: 3 }),
+[check("exampleInputName").isLength({ min: 3 }).trim().withMessage("enter valid name"),
 check("exampleInputEmail1").notEmpty().normalizeEmail(),
-check("exampleInputPassword1").notEmpty().isLength({ min: 5 }),
-check("exampleInputPassword2").notEmpty().isLength({ min: 5 })
+check("exampleInputPassword1").notEmpty().isLength({ min: 5 }).trim(),
+check("exampleInputPassword2").notEmpty().isLength({ min: 5 }).trim()
 ],
 (req,res)=>{
     req.session.user=req.body.exampleInputName;
@@ -60,8 +60,8 @@ else if(req.body.exampleInputPassword1 !== req.body.exampleInputPassword2) {
         }   
 else if(req.body.exampleInputName.length<3 && (req.body.exampleInputPassword1 !== req.body.exampleInputPassword2)  ) {
   
-            res.render("signup",{nav,title:"Libray",error1: "Invalid crentials",error2:"",error3:"",error4:""})
-            }  
+        res.render("signup",{nav,title:"Libray",error1: "Invalid crentials",error2:"",error3:"",error4:""})
+        }
  else {
   
     res.render("signup",{nav,title:"Libray",error1: "Invalid crentials",error2:"",error3:"",error4:""})
