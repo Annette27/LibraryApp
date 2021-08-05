@@ -21,6 +21,9 @@ const nav =[
     },
     {
         link:"/addbook",name:"Add Book"
+    },
+    {
+        link:"/addauthor",name:"Add Author"
     }
 ]
 const booksRouter = require("./src/routes/bookRoutes")(nav);
@@ -92,6 +95,50 @@ else if(req.body.Genre.length <5 ) {
  else {
   
     res.render("addbook",{nav,title:"Libray",error1: "Invalid crentials",error2:"",error3:"",error4:""})
+    }
+
+}) 
+app.get("/addauthor",function(req,res){
+    res.render("addauthor",{
+        nav,
+        title:"Add Author",
+        error1:"",
+        error2:"",
+        error3:"",
+        error4:""
+    
+    })
+    });
+app.post("/addauthor",
+[check("AuthorName").notEmpty().isLength({ min: 5 }),
+check("Genre").notEmpty().isLength({ min: 5 }),
+check("Country").notEmpty().isLength({ min: 5 })
+],
+(req,res)=>{
+    req.session.user=req.body.BookName;
+    var errors=[];
+    errors.push(validationResult(req))
+
+if(Object.entries(errors[0].errors).length === 0){
+   
+    res.render("index",{nav,title:"Libray",error1: "",error2:"",error3:"",error4:""})
+  
+}
+else if(req.body.BookName.length <5 ){
+  
+    res.render("addauthor",{nav,title:"Libray",error1: "Name should be atleast 5 letters long",error2:"",error3:"",error4:""})
+    }
+else if(req.body.Author.length <5) {
+  
+        res.render("addauthor",{nav,title:"Libray",error1: "",error2:"Country name should be atleast 5 letters long",error3:"",error4:""})
+        }   
+else if(req.body.Genre.length <5 ) {
+  
+            res.render("addauthor",{nav,title:"Libray",error1: "",error2:"",error3:"Genre name should be atleast 5 letters long",error4:""})
+            }  
+ else {
+  
+    res.render("addauthor",{nav,title:"Libray",error1: "Invalid crentials",error2:"",error3:"",error4:""})
     }
 
 }) 
