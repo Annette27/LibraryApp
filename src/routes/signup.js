@@ -23,29 +23,36 @@ function router(nav){
         [check("exampleInputName").isLength({ min: 3 }).trim().withMessage("enter valid name"),
         // check("exampleInputEmail1").notEmpty().normalizeEmail(),
         check("exampleInputEmail1").isEmail(),
-
-        // check("exampleInputPassword1").notEmpty().isLength({ min: 8 }).trim(),
         check("exampleInputPassword1").isLength({ min: 8 }).matches(/^(?=.*\d)(?=.*[a-z](?=.*[A-Z])[a-zA-Z\d@$.!%*#?&])/),
-        // check("exampleInputPassword2").notEmpty().isLength({ min: 5 }).trim()
         ],
         (req,res)=>{
            
-            // req.session.user=req.body.exampleInputName;
             var errors=[];
             errors.push(validationResult(req))
             var item ={
                     exampleInputEmail1: req.body.exampleInputEmail1,
                     exampleInputPassword1: req.body.exampleInputPassword1,
                       }
-        if(Object.entries(errors[0].errors).length === 0 && (req.body.exampleInputPassword1 === req.body.exampleInputPassword2)){
-            errors.push({"value":"password mismatch"})
-        
+                      console.log(Object.entries(errors[0].errors).length )
+        if(Object.entries(errors[0].errors).length === 1 && (req.body.exampleInputPassword1 === req.body.exampleInputPassword2)){
+            // errors.push({"value":"password mismatch"})
+            
              Userdata.findOne({exampleInputEmail1: item.exampleInputEmail1})
               
-                         
-                .then((user)=>{
-                   
-                    if(user){
+                    .then(()=>     {
+                            
+                        let response = {};
+                         response.title = 'SignUp';
+                         response.nav = nav.first; 
+                         response.error1="User Already exists.Please Signin";
+                         response.error2="";
+                         response.error3="";
+                         response.error4="";
+                        // console.log(user)
+                        res.render("signup",response)
+                    })
+                    if(item.exampleInputEmail1==="admin@gmail.com"){
+                            
                         let response = {};
                          response.title = 'SignUp';
                          response.nav = nav.first; 
@@ -56,6 +63,7 @@ function router(nav){
                         // console.log(user)
                         res.render("signup",response)
                     }
+
                     else{
                         let response = {};
                         response.title = 'Signin';
@@ -69,9 +77,7 @@ function router(nav){
                         res.render("signin",response)                    
                           
                     }
-                     
-                } )
-               
+           
         }
         
         // else if(  (req.body.exampleInputPassword1 === req.body.exampleInputPassword2) && req.body.exampleInputPassword1.length <5 ){
