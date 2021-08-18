@@ -84,7 +84,7 @@ function router(nav){
                             // Handle errors
                         })})
 
-                        booksupdateRouter.get("/edit/:id",function(req,res){
+                        booksupdateRouter.get("/edit/:id",redirectlogin,function(req,res){
                             let bookId = req.params.id;
                             Bookdata.findById(bookId)
                                 .then((book)=>{
@@ -102,7 +102,7 @@ function router(nav){
                             console.log("error")
                           
                             })
-                            booksupdateRouter.post("/edit/:id",upload.single("image"),function(req,res){
+                            booksupdateRouter.post("/edit/:id",redirectlogin,upload.single("image"),function(req,res){
                                 let bookId = req.params.id;
                                let updatedBook = req.body;
                                           
@@ -120,6 +120,7 @@ function router(nav){
                         author: req.body.author,
                         genre: req.body.genre,
                         image: req.file.filename,
+                        
                      }
                     // var book = Bookdata(item);
                     Bookdata.findByIdAndUpdate(bookId, item)
