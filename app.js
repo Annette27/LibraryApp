@@ -97,8 +97,25 @@ app.use("/signin",signinRouter);
 app.use("/signup",signupRouter);
 app.use("/authors",authorsRouter);
 
+const redirectlogin = (req,res,next)=>{
 
-app.get("/",function(req,res){
+    if(!req.session.id2){
+        let response = {};
+            response.title = 'library';
+            response.error1="";
+            response.error2="";
+            response.error3="";
+            response.error4="";
+            response.nav = nav.first;
+        res.render("index",response)
+        // console.log("errjhkrdghldhs")
+    }
+    else{
+        next()
+    }
+    }
+app.get("/",redirectlogin,function(req,res){
+    const{ id2 }= req.session
     let response = {};
     response.title = 'Library';
     req.session.Userid=req.body.exampleInputEmail1
