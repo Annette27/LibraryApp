@@ -1,58 +1,124 @@
 const express = require("express")
+const mongoose = require("mongoose")
+mongoose.connect("mongodb+srv://userone:userone@libraryfiles.o5pxy.mongodb.net/LIBRARYAPPNEW?retryWrites=true&w=majority",{useUnifiedTopology:true,useNewUrlParser:true});
+const Userdata = require("../model/userdata")
+
 const credential = {
     email : "admin@gmail.com",
     password :"admin12345"
 }
-const nav =[
-    {
-        link:"/books",name:"Books"
+const nav ={
+    first:[
+         {
+        link:"/Home",name:"Home"
     },
-    {
-        link:"/authors",name:"Authors"
-    },
-    {
+     {
         link:"/signin",name:"Sign In"
     },
     {
         link:"/signup",name:"Sign Up"
+    }
+    ],
+    user:[
+      {
+    link:"/books",name:"Books"
     },
     {
-        link:"/addbook",name:"Add Book"
-    }
-]
+    link:"/authors",name:"Authors"
+   },
+   {
+    link:"/logout",name:"Logout"
+   }
+   ],
+
+    admin:[
+        {
+            link:"/books",name:"Books"
+        },
+        {
+            link:"/authors",name:"Authors"
+        },
+        {
+            link:"/logout",name:"Logout"
+        },
+        {
+            link:"/addbook",name:"Add Book"
+        },
+        {
+            link:"/addauthor",name:"Add Author"
+        }
+
+    ]
+}
 const signinRouter = express.Router();
 function router(nav){
-    
+    let response = {};
+    response.title = 'Signin';
+    response.nav = nav.first; 
+    response.error1="";
+    response.error2="";
+    response.error3="";
+    response.error4="";
     signinRouter.get("/",function(req,res){
-        res.render("signin",{
+        res.render("signin",response
         
-            nav,
-            error1: "",
-            error2: ""
-        
-        })
+        )
         });
-     
+        signinRouter.post("/",(req,res)=>{
+            let response = {};
+            response.title = 'Library';
+            response.nav = nav.admin;
+            response.error1="";
+            response.error2="";
+            response.error3="";
+            response.error4="";
+        //   console.log(response)
+            if(req.body.email ==credential.email && req.body.password == credential.password){
+              req.session.Userid=req.body.email
+              console.log(req.body.email)
+              res.render("../views/index",response)
+               
+            }
+          
+            else{
+                var item ={
+                    exampleInputEmail1: req.body.email,
+                    exampleInputPassword1: req.body.password ,
+                      }
+                Userdata.findOne({exampleInputEmail1: item.exampleInputEmail1})
+                            
+                .then((user)=>{
+                    
+                    if(user&& user.exampleInputPassword1===item.exampleInputPassword1){
+                        req.session.Userid=req.body.email
+                        let response = {};
+                        response.title = 'Library';
+                        response.nav = nav.user;
+                        response.error1="";
+                        response.error2="";
+                        response.error3="";
+                        response.error4="";
+
+                        // console.log(user)
+                        res.render("index",response)
+                    }
+                    else{
+                        let response = {};
+                        response.title = 'SigninLibrary';
+                        response.nav = nav.first;
+                        response.error1="";
+                        response.error2="Incorrect password";
+                        response.error3="";
+                        response.error4="";
+                        console.log(user)
+                            res.render("signin",response)
+                    }
+                     
+                } )
+        
+            }
+        })      
        return signinRouter;
 }
-signinRouter.post("/",(req,res)=>{
-    if(req.body.email ==credential.email && req.body.password == credential.password){
-      req.session.user=req.body.email;
-  
-      res.render("index",{nav,title:"Libray",error1: "",error2:""})
-       
-    }
-    else if(req.body.email !=credential.email && req.body.password == credential.password){
-       
-        res.render("signin",{nav,title:"Libray",error1: "incorrect username",error2:""})
-    }
-    else if(req.body.password != credential.password && req.body.email ==credential.email){
-        res.render("signin",{nav,title:"Libray",error2: "incorrect password",error1:""})
-    }
-    else{
-        // res.end("invalid Password")
-        res.render("signin",{nav,title:"Libray",error2: "incorrect password",error1: "incorrect username"})
 
-    }
-}) 
 module.exports = router;        
