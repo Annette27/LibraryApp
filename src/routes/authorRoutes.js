@@ -1,66 +1,84 @@
+module.exports = router;        
+
 const express = require("express")
 
 const authorsRouter = express.Router();
+const Authordata = require("../model/authordata")
+const Userdata = require("../model/userdata")
+
 function router(nav){
-    var authors=[
-        {
-            title:"Christopher Paolini",
-            nationality:"The U.S",
-            genre:"Fantasy",
-            img:"chris.jpg"
-        },
-        {
-            title:"J K Rowling",
-            nationality:"U.K",
-            genre:"Fantasy,drama",
-            img:"jkrowling.jpg"
-        },
-        {
-            title:"Enid Blyton",
-            nationality:"U.K",
-            genre:"Children's Literature,mystery",
-            img:"enid.jpg"
-        },
-        {
-            title:"Arundhathi Roy",
-            nationality:"India",
-            genre:"fiction & Non-fiction",
-            img:"arun.jpg"
-        },
-        {
-            title:"Agatha Christy",
-            nationality:"U.K",
-            genre:"Murder mystery,detective story,thriller",
-            img:"agatha.jpg"
-        },
-        {
-            title:"Ruskin Bond",
-            nationality:"India",
-            genre:"fiction,Children's books",
-            img:"ruskin.jpg"
-        }
+  let response = {};
+    response.title = 'SignUp';
+    response.nav = nav.first; 
+    response.error1="";
+    response.error2="";
+    response.error3="";
+    response.error4="";
     
-    ]
-   
     authorsRouter.get("/",function(req,res){
-        res.render("authors",{
+      if(req.session.Userid=="admin@gmail.com"){
+        Authordata.find()
+        .then(function(authors){
+            res.render("authors",{
         
+                title:"Authors",
+                nav:nav.admin,
+                authors
+            
+            })
+        })
+      }
+  else if(Userdata.find({ exampleInputEmail1:req.session.Userid})){
+    Authordata.find()
+    .then(function(authors){
+        res.render("authors",{
+    
             title:"Authors",
-            nav,
+            nav:nav.user,
             authors
         
         })
+    })
+
+  }
+
+      
+      else{
+        res.render("index",response)
+      }
+     
         });
         authorsRouter.get("/:id",function(req,res){
           const id= req.params.id
+          if(req.session.Userid=="admin@gmail.com"){
+          Authordata.findOne({_id:id})
+          .then(function(author){
             res.render("author",{
             
                 title:"Author",
-                nav,
-                author:authors[id]
+                nav:nav.admin,
+                author
             
             })
             });
+          }
+          else if(Userdata.find({ exampleInputEmail1:req.session.Userid})){
+            Authordata.findOne({_id:id})
+            .then(function(author){
+              res.render("author",{
+              
+                  title:"Author",
+                  nav:nav.user,
+                  author
+              
+              })
+              });
+          }
+          else{
+            res.render("index",response)
+          }
+          })
+           
             return authorsRouter
 }
 
