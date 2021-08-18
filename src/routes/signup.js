@@ -21,9 +21,12 @@ function router(nav){
      
         signupRouter.post("/",
         [check("exampleInputName").isLength({ min: 3 }).trim().withMessage("enter valid name"),
-        check("exampleInputEmail1").notEmpty().normalizeEmail(),
-        check("exampleInputPassword1").notEmpty().isLength({ min: 5 }).trim(),
-        check("exampleInputPassword2").notEmpty().isLength({ min: 5 }).trim()
+        // check("exampleInputEmail1").notEmpty().normalizeEmail(),
+        check("exampleInputEmail1").isEmail(),
+
+        // check("exampleInputPassword1").notEmpty().isLength({ min: 8 }).trim(),
+        check("exampleInputPassword1").isLength({ min: 8 }).matches(/^(?=.*\d)(?=.*[a-z](?=.*[A-Z])[a-zA-Z\d@$.!%*#?&])/),
+        // check("exampleInputPassword2").notEmpty().isLength({ min: 5 }).trim()
         ],
         (req,res)=>{
            
@@ -71,13 +74,15 @@ function router(nav){
                
         }
         
-        else if(  (req.body.exampleInputPassword1 === req.body.exampleInputPassword2) && req.body.exampleInputPassword1.length <5 ){
+        // else if(  (req.body.exampleInputPassword1 === req.body.exampleInputPassword2) && req.body.exampleInputPassword1.length <5 ){
+        else if(  (req.body.exampleInputPassword1 === req.body.exampleInputPassword2) && !check(req.body.exampleInputPassword1.length).isLength({ min: 8 }).matches(/^(?=.*\d)(?=.*[a-z](?=.*[A-Z])[a-zA-Z\d@$.!%*#?&])/)  ){
+
             let response = {};
             response.title = 'SignUp';
             response.nav = nav.first; 
             response.error1="";
             response.error2="";
-            response.error3="Password weak";
+            response.error3="Password should be atleast 8 characcter and conatin atleast one uppercase,one lowercase, one number and one special character ";
             response.error4="";
             res.render("signup",response)
             }
@@ -91,22 +96,32 @@ function router(nav){
             response.error4="Password mismatch";
             res.render("signup",response)
                 }   
-        else if(req.body.exampleInputName.length<3 && (req.body.exampleInputPassword1 !== req.body.exampleInputPassword2)  ) {
+        else if(req.body.exampleInputName.length<3 ) {
             let response = {};
             response.title = 'SignUp';
             response.nav = nav.first; 
-            response.error1="Invalid crentials";
+            response.error1="Invalid Username";
             response.error2="";
             response.error3="";
             response.error4="";
             res.render("signup",response)
                 }
+                else if(!check(req.body.exampleInputEmail1).isEmail().normalizeEmail() ) {
+                    let response = {};
+                    response.title = 'SignUp';
+                    response.nav = nav.first; 
+                    response.error1="";
+                    response.error2="Email Id Invalid";
+                    response.error3="";
+                    response.error4="";
+                    res.render("signup",response)
+                        }    
          else {
           
             let response = {};
             response.title = 'SignUp';
             response.nav = nav.first; 
-            response.error1="Invalid crentials";
+            response.error1="Email Id Invalid";
             response.error2="";
             response.error3="";
             response.error4="";
