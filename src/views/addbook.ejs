@@ -21,7 +21,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a href="/" class="navbar-brand">Home</a>
+      <!-- <a href="/" class="navbar-brand">Home</a> -->
     </div>
     <nav class="collapse navbar-collapse" role="navigation">
       <ul class="nav navbar-nav">
@@ -66,28 +66,26 @@
 
 
 <div class="container" style="height: 600px;" style="align-content: center;" >
-          <form  method="POST" >
+          <form  method="POST" action="./addbook" enctype="multipart/form-data" >
             <div class="containerSignUp" class="col-lg-4">
            
               <h2 style="text-align: center;">Add Book</h2><br>
              
               <div class="mb-2" class="form-group" >
-                <label for="exampleInputEmail1" class="form-label" id="fName">Name of the Book</label>
-                <input type="text" class="form-control" name="BookName"  required>
-                <!-- <div id="emailHelp" class="form-text">Enter your Full Name</div> -->
+                <label for="exampleInputEmail1" class="form-label" id="name">Name of the Book</label>
+                <input type="text" class="form-control" enctype="multipart/form-data" name="title"  required>
                 <label for="exampleInputEmail1" class="form-label" id="Name" style="color: brown;"><%=error1%></label>
               </div>
               <div class="mb-2" class="form-group">
                 <label for="exampleInputEmail1" class="form-label" id="eadd">Name of the Author</label>
-                <input type="text" class="form-control" name="Author" required>
-                <!-- <div id="emailHelp" class="form-text">Enter your email id.</div> -->
+                <input type="text" class="form-control" name="author" enctype="multipart/form-data" required>
                 <label for="exampleInputEmail1" class="form-label" id="error1" style="color: brown;"><%=error2%></label>
               </div>
               
               <div class="mb-2" class="form-group" >
                 <label for="exampleInputPassword1" class="form-label" id="pLabel1">Genre</label>
                 <div class="field1">
-                <input  type="password" class="form-control" name="Genre" required>
+                <input  type="text" class="form-control" name="genre" enctype="multipart/form-data" required>
                 <span id="showBtn">SHOW</span>
               </div>
              <div id="text1" style="color: brown;"><%=error3%></div>
@@ -95,7 +93,7 @@
               </div>
               <br>
               <div class="mb-2">
-                <input  type="file" class="form-control" name="image" accept="image/*" required>
+                <input  type="file"  name="image" enctype="multipart/form-data"  accept="image/*" required>
               </div>
               <br>
               <center>
