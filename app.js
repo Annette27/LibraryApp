@@ -1,145 +1,130 @@
 const express = require("express");
+const multer = require("multer")
+const morgan = require("morgan")
+const fs = require("fs")
+const path = require("path")
 const app = new express();
 const bodyparser = require("body-parser");
 const session = require("express-session");
+const mongoose = require("mongoose")
+const MongoStore = require('connect-mongo');  
 const{check,validationResult}= require("express-validator")
 const {v4:uuidv4}= require("uuid");
 const port= process.env.PORT||5000;
 
-const nav =[
-    {
-        link:"/books",name:"Books"
-    },
-    {
-        link:"/authors",name:"Authors"
-    },
-    {
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({extended:true}))
+app.use(morgan("dev"))
+const Userdata = require("./src/model/userdata")
+
+const nav ={
+    first:[
+         {
+        link:"/",name:"Home"
+         },
+         {
         link:"/signin",name:"Sign In"
-    },
-    {
+         },
+         {
         link:"/signup",name:"Sign Up"
-    },
-    {
-        link:"/addbook",name:"Add Book"
-    },
-    {
-        link:"/addauthor",name:"Add Author"
-    }
-]
+         }
+         ],
+    user:[
+        {
+        link:"/books",name:"Books"
+        },
+        {
+        link:"/authors",name:"Authors"
+        },
+        {
+        link:"/logout",name:"Logout"
+        }
+   ],
+
+    admin:[
+        {
+            link:"/",name:"Home"
+             },
+        
+        {
+            link:"/books",name:"Books"
+        },
+        {
+            link:"/authors",name:"Authors"
+        },
+       
+        {
+            link:"/addbook",name:"Add Book"
+        },
+        {
+            link:"/addauthor",name:"Add Author"
+        },
+        {
+            link:"/addbook/modify",name:"Modify Book"
+        },
+        {
+            link:"/addauthor/modify",name:"Modify Author"
+        }
+        ,
+        {
+           link:"/logout",name:"Logout"
+       }
+    ]
+}
 const booksRouter = require("./src/routes/bookRoutes")(nav);
 const signinRouter = require("./src/routes/signin")(nav);
 const authorsRouter = require("./src/routes/authorRoutes")(nav);
 const signupRouter = require("./src/routes/signup")(nav);
+const booksupdateRouter = require("./src/routes/bookupdate")(nav);
+const authorupdateRouter = require("./src/routes/authorupdate")(nav);
 
-app.use(bodyparser.json());
-app.use(bodyparser.urlencoded({extended:false}))
 app.use(session({
     secret:uuidv4(),
     resave:false,
-    saveUninitialized:false
+    saveUninitialized:true,
+    cookie: { secure: false },
+    store: MongoStore.create({mongoUrl: "mongodb+srv://userone:userone@libraryfiles.o5pxy.mongodb.net/LIBRARYAPPNEW?retryWrites=true&w=majority"})
+
 }));
 app.use(express.static("./public"));
 app.set("view engine","ejs")//setting template engine to ejs.ejs is used to embed js into html
 app.set("views","./src/views") //setting the path of index page
 // app.set("views",__dirname+"/src/views")
 app.use("/books",booksRouter);
+app.use("/addbook",booksupdateRouter);
+app.use("/addauthor",authorupdateRouter);
 app.use("/signin",signinRouter);
 app.use("/signup",signupRouter);
 app.use("/authors",authorsRouter);
+
+
 app.get("/",function(req,res){
-res.render("index",{
-    nav,
-    title:"Library",
+    let response = {};
+    response.title = 'Library';
+    req.session.Userid=req.body.exampleInputEmail1
+    console.log(req.session.Userid)
+    if(req.session.Userid=="admin@gmail.com"){
+        response.nav = nav.admin;
+    }
+    else if(Userdata.find({exampleInputEmail1:req.session.Userid})){
+        response.nav = nav.first;
 
-})
+    }
+    else{
+        response.nav = nav.first;
+    }
+   
+    res.render("index",response)
+
 });
-app.get("/addbook",function(req,res){
-    res.render("addbook",{
-        nav,
-        title:"Add Book",
-        error1:"",
-        error2:"",
-        error3:"",
-        error4:""
-    
-    })
-    });
+app.get("/logout",function(req,res){
+    let response = {};
+    response.title = 'Library';
+    response.nav = nav.first;
+    req.session.destroy();
+    res.redirect('/signin');
+});
 
-app.post("/addbook",
-[check("BookName").notEmpty().isLength({ min: 5 }),
-check("Genre").notEmpty().isLength({ min: 5 }),
-check("Author").notEmpty().isLength({ min: 5 })
-],
-(req,res)=>{
-    req.session.user=req.body.BookName;
-    var errors=[];
-    errors.push(validationResult(req))
 
-if(Object.entries(errors[0].errors).length === 0){
-   
-    res.render("index",{nav,title:"Libray",error1: "",error2:"",error3:"",error4:""})
-  
-}
-else if(req.body.BookName.length <5 ){
-  
-    res.render("addbook",{nav,title:"Libray",error1: "Book name should be atleast 5 letters long",error2:"",error3:"",error4:""})
-    }
-else if(req.body.Author.length <5) {
-  
-        res.render("addbook",{nav,title:"Libray",error1: "",error2:"Author name should be atleast 5 letters long",error3:"",error4:""})
-        }   
-else if(req.body.Genre.length <5 ) {
-  
-            res.render("addbook",{nav,title:"Libray",error1: "",error2:"",error3:"Genre name should be atleast 5 letters long",error4:""})
-            }  
- else {
-  
-    res.render("addbook",{nav,title:"Libray",error1: "Invalid crentials",error2:"",error3:"",error4:""})
-    }
 
-}) 
-app.get("/addauthor",function(req,res){
-    res.render("addauthor",{
-        nav,
-        title:"Add Author",
-        error1:"",
-        error2:"",
-        error3:"",
-        error4:""
-    
-    })
-    });
-app.post("/addauthor",
-[check("AuthorName").notEmpty().isLength({ min: 5 }),
-check("Genre").notEmpty().isLength({ min: 5 }),
-check("Country").notEmpty().isLength({ min: 5 })
-],
-(req,res)=>{
-    req.session.user=req.body.BookName;
-    var errors=[];
-    errors.push(validationResult(req))
-
-if(Object.entries(errors[0].errors).length === 0){
-   
-    res.render("index",{nav,title:"Libray",error1: "",error2:"",error3:"",error4:""})
-  
-}
-else if(req.body.BookName.length <5 ){
-  
-    res.render("addauthor",{nav,title:"Libray",error1: "Name should be atleast 5 letters long",error2:"",error3:"",error4:""})
-    }
-else if(req.body.Author.length <5) {
-  
-        res.render("addauthor",{nav,title:"Libray",error1: "",error2:"Country name should be atleast 5 letters long",error3:"",error4:""})
-        }   
-else if(req.body.Genre.length <5 ) {
-  
-            res.render("addauthor",{nav,title:"Libray",error1: "",error2:"",error3:"Genre name should be atleast 5 letters long",error4:""})
-            }  
- else {
-  
-    res.render("addauthor",{nav,title:"Libray",error1: "Invalid crentials",error2:"",error3:"",error4:""})
-    }
-
-}) 
 app.listen(port,()=>{console.log("Server ready at " + port)});
