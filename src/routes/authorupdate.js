@@ -86,7 +86,7 @@ function router(nav){
                             // Handle errors
                         })})
 
-                        authorupdateRouter.get("/edit/:id",function(req,res){
+                        authorupdateRouter.get("/edit/:id",redirectlogin,function(req,res){
                             let authorId = req.params.id;
                             Authordata.findById(authorId)
                                 .then((author)=>{
@@ -104,7 +104,7 @@ function router(nav){
                             console.log("error")
                           
                             })
-                            authorupdateRouter.post("/edit/:id",upload.single("image"),function(req,res){
+                            authorupdateRouter.post("/edit/:id",redirectlogin,upload.single("image"),function(req,res){
                                 let authorId = req.params.id;
                                let updatedAuthor = req.body;
                                           
@@ -131,7 +131,7 @@ function router(nav){
                           
                                 })
               
-                                authorupdateRouter.post("/",upload.single("image"),redirectlogin,function(req,res,next){
+                                authorupdateRouter.post("/",redirectlogin,upload.single("image"),redirectlogin,function(req,res,next){
                
             let response = {};
             response.title = 'Author';
