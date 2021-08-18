@@ -3,22 +3,23 @@ const express = require("express")
 const booksRouter = express.Router();
 const Bookdata = require("../model/bookdata")
 const Userdata = require("../model/userdata")
-const redirectlogin = (req,res,next)=>{
-  if(req.session.Userid!=="admin@gmail.com"){
-      let response = {};
-          response.title = 'library';
-          response.error1="";
-          response.error2="";
-          response.error3="";
-          response.error4="";
-          response.nav = nav.first;
-      res.redirect("/",response)
-  }
-  else{
-      next()
-  }
-  }
+// const redirectlogin = (req,res,next)=>{
+//   if(req.session.Userid!=="admin@gmail.com"){
+//       let response = {};
+//           response.title = 'library';
+//           response.error1="";
+//           response.error2="";
+//           response.error3="";
+//           response.error4="";
+//           response.nav = nav.first;
+//       res.redirect("/",response)
+//   }
+//   else{
+//       next()
+//   }
+//   }
 function router(nav){
+
   let response = {};
     response.title = 'SignUp';
     response.nav = nav.first; 
@@ -28,6 +29,7 @@ function router(nav){
     response.error4="";
     
     booksRouter.get("/",function(req,res){
+    
       if(req.session.Userid=="admin@gmail.com"){
         Bookdata.find()
         .then(function(books){
