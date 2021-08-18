@@ -171,13 +171,14 @@ a,a:hover {
 
 .btns {
   display: inline-flex;
-  position: relative;
-  left: 100%;
+  position: absolute;
+  left: 120%;
  
 }
 .edit , .delete{
   padding: 5px;
   margin: 5px;
   cursor: pointer;
+  
   
 }
